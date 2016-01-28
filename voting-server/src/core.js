@@ -13,8 +13,8 @@ export function next(state) {
   const entries = state.get('entries')
     .concat(getWinners(state.get('vote')));
   // state.update('round', 0, round => round + 1);
-  let round = state.get('round') || 0;
-  round++;
+  const round = state.get('round', 0) + 1;
+
   /*
    * NOTE: the old state should always be the starting point
    * for the new state
@@ -34,13 +34,13 @@ export function next(state) {
       .remove('entries')
       .set('winner', entries.first());
   } else {
-    return state.merge({
-      vote: Map({
+    return state.merge(fromJS({
+      vote: {
         pair: entries.take(2)
-      }),
+      },
       entries: entries.skip(2),
       round: round
-    });
+    }));
   }
 
 } // end next export func next
@@ -67,13 +67,13 @@ export function vote(voteState, aVote) {
   return voteState
 }
 
-function getWinners(vote) {
-  if (!vote) return [];
+export function getWinners(vote) {
+  if (!vote) return List();
   const [a, b] = vote.get('pair');
-  const aVotes = vote.getIn(['tally', a], []);
-  const bVotes = vote.getIn(['tally', b], []);
+  const aVotes = vote.getIn(['tally', a], List());
+  const bVotes = vote.getIn(['tally', b], List());
 
-  if (aVotes.length > bVotes.length) return [a];
-  else if (aVotes.length < bVotes.length) return [b];
-  else return [a, b];
+  if (aVotes.size > bVotes.size) return List.of(a);
+  else if (aVotes.size < bVotes.size) return List.of(b);
+  else return List.of(a, b);
 }
