@@ -17,40 +17,33 @@ describe('in core', () => {
   describe('next', () => {
 
     // TODO : figure out why this test is failing!
-    // it('updates the round id when a vote begins', () => {
-    //   const state = fromJS({
-    //     vote: {
-    //       pair: ['Trainspotting', 'Millions'],
-    //       tally: {
-    //         Trainspotting: ['2356', '6432'],
-    //         Millions: ['5334']
-    //       }
-    //     },
-    //     entries: ['Star Wars', 'B.S.G'],
-    //     round: 1
-    //   });
-    //
-    //   const nextState = next(state);
-    //
-    //   expect(nextState).to.equal(fromJS({
-    //     vote: {
-    //       pair: ['Star Wars', 'B.S.G.']
-    //     },
-    //     entries: ['Trainspotting'],
-    //     round: 2
-    //   }));
-    // });
+    it('updates the round id when a vote begins', () => {
+      const state = fromJS({
+        entries: ['Star Wars', 'B.S.G', 'Trainspotting'],
+        round: 0
+      });
+
+      const nextState = next(state);
+
+      expect(nextState).to.equal(fromJS({
+        entries: ['Trainspotting'],
+        round: 1,
+        vote: {
+          pair: ['Star Wars', 'B.S.G.']
+        }
+      }));
+    });
 
     it('has a winner, and the vote is over', () => {
-      const state = Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
+      const state = fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
             'Trainspotting': ['4352', '1004', '5673'],
             '28 Days Later': ['8445', '3643']
-          })
-        }),
-        entries: List()
+          }
+        },
+        entries: []
       });
 
       const nextState = next(state);
@@ -84,16 +77,16 @@ describe('in core', () => {
       })); // end expect
     }); // end it
 
-    it('puts winner of current vote back to entries', () => {
-      const state = Map({
-        vote: Map({
-          pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
+    it('puts winner of current vote back into entries', () => {
+      const state = fromJS({
+        vote: {
+          pair: ['Trainspotting', '28 Days Later'],
+          tally: {
             'Trainspotting': ['4352', '1004', '5673'],
             '28 Days Later': ['8445', '3643']
-          })
-        }),
-        entries: List.of('Sunshine', 'Millions', '127 Hours')
+          }
+        },
+        entries: ['Sunshine', 'Millions', '127 Hours']
       });
 
       const nextState = next(state);

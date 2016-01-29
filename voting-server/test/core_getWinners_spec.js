@@ -16,12 +16,12 @@ describe('in core', () => {
 
   describe('getWinners', () => {
 
-    it('will return an empty List if there is no vote', () => {
+    it('returns an empty List if there is no vote', () => {
       const result = getWinners(undefined);
       expect(result).to.equal(List());
     }); // end it
 
-    it('will return a tie if the tallys are equal', () => {
+    it('returns a tie if the tallys are equal', () => {
       const aVote = fromJS({
         pair: ['Trainspotting', 'Sunshine'],
         tally: {
@@ -35,21 +35,21 @@ describe('in core', () => {
       expect(result).to.equal(List.of('Trainspotting', 'Sunshine'));
     }); // end it
 
-    it('will return the winner if there is a higher tally', () => {
+    it('returns the winner if there is one', () => {
       const aVote = fromJS({
-        pair: ['Trainspotting', 'Sunshine'],
+        pair: ['Trainspotting', '28 Days Later'],
         tally: {
-          Trainspotting: ['1337'],
-          Sunshine: ['4432', '6547']
+          'Trainspotting': ['4352', '1004', '5673'],
+          '28 Days Later': ['8445', '3643']
         }
       });
 
       const result = getWinners(aVote);
 
-      expect(result).to.equal(List.of('Sunshine'));
+      expect(result).to.equal(List.of('Trainspotting'));
     }); // end it
 
-    it('will initialize a tally if it does not exist', () => {
+    it('initializes a tally if it does not exist', () => {
       const aVote = fromJS({
         pair: ['Trainspotting', 'Sunshine']
       });

@@ -12,7 +12,7 @@ export function setEntries(state, entries) {
 export function next(state) {
   const entries = state.get('entries')
     .concat(getWinners(state.get('vote')));
-  // state.update('round', 0, round => round + 1);
+
   const round = state.get('round', 0) + 1;
 
   /*
