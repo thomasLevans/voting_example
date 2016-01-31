@@ -57,7 +57,8 @@ export function vote(voteState, aVote) {
    * updateIn(path, default value if null, function to execute)
    */
 
-  if (voteState.get('pair').includes(theVote.get('entry'))) {
+  if (voteState.get('pair')
+    .includes(theVote.get('entry'))) {
     const uuid = theVote.get('uuid');
     const entry = theVote.get('entry');
 
