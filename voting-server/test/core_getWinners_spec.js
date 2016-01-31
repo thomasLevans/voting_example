@@ -24,9 +24,9 @@ describe('in core', () => {
     it('returns a tie if the tallys are equal', () => {
       const aVote = fromJS({
         pair: ['Trainspotting', 'Sunshine'],
-        tally: {
-          Trainspotting: ['1337'],
-          Sunshine: ['8486']
+        votes: {
+          '1337': 'Trainspotting',
+          '8486': 'Sunshine'
         }
       });
 
@@ -38,25 +38,16 @@ describe('in core', () => {
     it('returns the winner if there is one', () => {
       const aVote = fromJS({
         pair: ['Trainspotting', '28 Days Later'],
-        tally: {
-          'Trainspotting': ['4352', '1004', '5673'],
-          '28 Days Later': ['8445', '3643']
+        votes: {
+          '2342': 'Trainspotting',
+          '8789': 'Trainspotting',
+          '2328': '28 Days Later'
         }
       });
 
       const result = getWinners(aVote);
 
       expect(result).to.equal(List.of('Trainspotting'));
-    }); // end it
-
-    it('initializes a tally if it does not exist', () => {
-      const aVote = fromJS({
-        pair: ['Trainspotting', 'Sunshine']
-      });
-
-      const result = getWinners(aVote);
-
-      expect(result).to.equal(List.of('Trainspotting', 'Sunshine'));
     }); // end it
 
   }); // end describe getWinners

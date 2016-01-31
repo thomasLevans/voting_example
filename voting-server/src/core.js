@@ -58,22 +58,35 @@ export function vote(voteState, aVote) {
    */
 
   if (voteState.get('pair').includes(theVote.get('entry'))) {
-    return voteState.updateIn(
-      ['tally', theVote.get('entry')], List(),
-      tally => tally.push(theVote.get('uuid'))
-    );
-  }
+    const uuid = theVote.get('uuid');
+    const entry = theVote.get('entry');
 
+    return voteState.updateIn(
+      ['votes', uuid],
+      any => entry);
+  }
   return voteState
 }
 
 export function getWinners(vote) {
   if (!vote) return List();
-  const [a, b] = vote.get('pair');
-  const aVotes = vote.getIn(['tally', a], List());
-  const bVotes = vote.getIn(['tally', b], List());
 
-  if (aVotes.size > bVotes.size) return List.of(a);
-  else if (aVotes.size < bVotes.size) return List.of(b);
+  const [a, b] = vote.get('pair');
+  const tally = getTally(vote.get('votes'));
+  const aVotes = tally.get(a);
+  const bVotes = tally.get(b);
+
+  if (aVotes > bVotes) return List.of(a);
+  else if (aVotes < bVotes) return List.of(b);
   else return List.of(a, b);
+}
+
+export function getTally(votes) {
+  const entries = votes.values();
+  let tally = {};
+
+  for (var e of entries) {
+    tally[e] = tally[e] + 1 || 1;
+  }
+  return Map(tally);
 }

@@ -30,8 +30,8 @@ describe('in core', () => {
 
       expect(nextState).to.equal(fromJS({
         pair: ['Trainspotting', 'Sunshine'],
-        tally: {
-          Sunshine: [aVote.uuid]
+        votes: {
+          '1337': 'Sunshine'
         }
       }));
     }); // end it
@@ -68,40 +68,12 @@ describe('in core', () => {
 
       expect(nextState).to.equal(fromJS({
         pair: ['Trainspotting', '28 Days Later'],
-        tally: {
-          'Trainspotting': [aVote.uuid]
+        votes: {
+          '1337': 'Trainspotting'
         }
       })); // end expect
 
     }); // end it
-
-    // TODO : why does this test break all other tests?
-    // it('adds to an existing tally for the voted entry', () => {
-    //
-    //   const state = fromJS({
-    //     pair: ['Trainspotting', '28 Days Later'],
-    //     tally: {
-    //       'Trainspotting': ['4352', '1004', '5673'],
-    //       '28 Days Later': ['8445', '3643']
-    //     }
-    //   });
-    //
-    //   const aVote = Map({
-    //     uuid: '1337',
-    //     entry: 'Trainspotting'
-    //   });
-    //
-    //   const nextState = vote(state, aVote);
-    //
-    //   expect(nextState).to.equal(fromJS({
-    //     pair: ['Trainspotting', '28 Days Later'],
-    //     tally: {
-    //       'Trainspotting': ['4352', '1004', '5673', '1337'],
-    //       '28 Days Later': ['8445', '3643']
-    //     }
-    //   })); // end expect
-    //
-    // }); // end it
 
     it('should track and update a users entry during a vote', () => {
       const state = fromJS({
@@ -116,8 +88,8 @@ describe('in core', () => {
       const nextState = vote(state, aVote);
       expect(nextState).to.equal(fromJS({
         pair: ['Trainspotting', 'Sunshine'],
-        tally: {
-          Sunshine: [aVote.get('uuid')]
+        votes: {
+          '1337': 'Sunshine'
         }
       }));
 
@@ -128,11 +100,10 @@ describe('in core', () => {
 
       const finalState = vote(nextState, reVote);
 
-      expect(nextState).to.equal(fromJS({
+      expect(finalState).to.equal(fromJS({
         pair: ['Trainspotting', 'Sunshine'],
-        tally: {
-          Trainspotting: [aVote.get('uuid')],
-          Sunshine: []
+        votes: {
+          '1337': 'Trainspotting'
         }
       }));
 

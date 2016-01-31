@@ -19,28 +19,30 @@ describe('in core', () => {
     // TODO : figure out why this test is failing!
     it('updates the round id when a vote begins', () => {
       const state = fromJS({
-        entries: ['Star Wars', 'B.S.G', 'Trainspotting'],
-        round: 0
+        entries: ['Star Wars', 'B.S.G', 'Trainspotting']
       });
 
       const nextState = next(state);
 
       expect(nextState).to.equal(fromJS({
         entries: ['Trainspotting'],
-        round: 1,
         vote: {
           pair: ['Star Wars', 'B.S.G.']
-        }
+        },
+        round: 1
       }));
-    });
+    }); // end it
 
     it('has a winner, and the vote is over', () => {
       const state = fromJS({
         vote: {
           pair: ['Trainspotting', '28 Days Later'],
-          tally: {
-            'Trainspotting': ['4352', '1004', '5673'],
-            '28 Days Later': ['8445', '3643']
+          votes: {
+            '4352': 'Trainspotting',
+            '1004': 'Trainspotting',
+            '5673': 'Trainspotting',
+            '8445': '28 Days Later',
+            '3643': '28 Days Later'
           }
         },
         entries: []
@@ -58,9 +60,11 @@ describe('in core', () => {
       const state = Map({
         vote: Map({
           pair: List.of('Trainspotting', '28 Days Later'),
-          tally: Map({
-            'Trainspotting': ['4352', '1004'],
-            '28 Days Later': ['8445', '3643']
+          votes: Map({
+            '4352': 'Trainspotting',
+            '1004': 'Trainspotting',
+            '8445': '28 Days Later',
+            '3643': '28 Days Later'
           })
         }),
         entries: List.of('Millions', '127 Hours')
@@ -81,9 +85,12 @@ describe('in core', () => {
       const state = fromJS({
         vote: {
           pair: ['Trainspotting', '28 Days Later'],
-          tally: {
-            'Trainspotting': ['4352', '1004', '5673'],
-            '28 Days Later': ['8445', '3643']
+          votes: {
+            '4352': 'Trainspotting',
+            '1004': 'Trainspotting',
+            '5673': 'Trainspotting',
+            '8445': '28 Days Later',
+            '3643': '28 Days Later'
           }
         },
         entries: ['Sunshine', 'Millions', '127 Hours']
