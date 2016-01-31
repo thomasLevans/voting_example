@@ -7,15 +7,29 @@ export function setState(state) {
 
 export function vote(entry) {
   return {
-    meta: { remote: true },
+    meta: {
+      remote: true
+    },
     type: 'VOTE',
-    entry
+    data: {
+      entry: entry,
+      uuid: ''
+    }
   };
 }
 
 export function next() {
   return {
-    meta: { remote: true },
+    meta: {
+      remote: true
+    },
     type: 'NEXT'
   };
+}
+
+export function setClientId(clientId) {
+  return {
+    type: 'SET_CLIENT_ID',
+    clientId
+  }
 }

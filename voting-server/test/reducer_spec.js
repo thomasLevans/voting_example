@@ -178,8 +178,8 @@ describe('reducer', () => {
     expect(nextState).to.equal(Map({
       vote: Map({
         pair: List.of('Trainspotting', 'Sunshine'),
-        tally: Map({
-          'Sunshine': List.of('1337')
+        votes: Map({
+          '1337': 'Sunshine'
         })
       }),
       entries: List.of('127 Hours')

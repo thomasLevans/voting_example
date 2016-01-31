@@ -12,9 +12,9 @@ export function setEntries(state, entries) {
 export function next(state) {
   const entries = state.get('entries')
     .concat(getWinners(state.get('vote')));
-  // state.update('round', 0, round => round + 1);
-  let round = state.get('round') || 0;
-  round++;
+
+  const round = state.get('round', 0) + 1;
+
   /*
    * NOTE: the old state should always be the starting point
    * for the new state
@@ -34,13 +34,13 @@ export function next(state) {
       .remove('entries')
       .set('winner', entries.first());
   } else {
-    return state.merge({
-      vote: Map({
+    return state.merge(fromJS({
+      vote: {
         pair: entries.take(2)
-      }),
+      },
       entries: entries.skip(2),
       round: round
-    });
+    }));
   }
 
 } // end next export func next
@@ -57,23 +57,37 @@ export function vote(voteState, aVote) {
    * updateIn(path, default value if null, function to execute)
    */
 
-  if (voteState.get('pair').includes(theVote.get('entry'))) {
-    return voteState.updateIn(
-      ['tally', theVote.get('entry')], List(),
-      tally => tally.push(theVote.get('uuid'))
-    );
-  }
+  if (voteState.get('pair')
+    .includes(theVote.get('entry'))) {
+    const uuid = theVote.get('uuid');
+    const entry = theVote.get('entry');
 
+    return voteState.updateIn(
+      ['votes', uuid],
+      any => entry);
+  }
   return voteState
 }
 
-function getWinners(vote) {
-  if (!vote) return [];
-  const [a, b] = vote.get('pair');
-  const aVotes = vote.getIn(['tally', a], []);
-  const bVotes = vote.getIn(['tally', b], []);
+export function getWinners(vote) {
+  if (!vote) return List();
 
-  if (aVotes.length > bVotes.length) return [a];
-  else if (aVotes.length < bVotes.length) return [b];
-  else return [a, b];
+  const [a, b] = vote.get('pair');
+  const tally = getTally(vote.get('votes'));
+  const aVotes = tally.get(a);
+  const bVotes = tally.get(b);
+
+  if (aVotes > bVotes) return List.of(a);
+  else if (aVotes < bVotes) return List.of(b);
+  else return List.of(a, b);
+}
+
+export function getTally(votes) {
+  const entries = votes.values();
+  let tally = {};
+
+  for (var e of entries) {
+    tally[e] = tally[e] + 1 || 1;
+  }
+  return Map(tally);
 }
